@@ -1,0 +1,19 @@
+name: CI Pipeline
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'
+        cache: false
+    - run: go build -v ./...
+      working-directory: ./sys-monitor
+    - run: go vet ./...
+      working-directory: ./sys-monitor
+    - run: docker build -t sys-monitor:latest .
+      working-directory: ./sys-monitor
